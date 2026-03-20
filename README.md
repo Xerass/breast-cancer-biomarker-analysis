@@ -10,8 +10,8 @@ This project trains a LASSO model on the **GSE15852** dataset to select a compac
 
 | File / Directory | Description |
 |---|---|
-| `analysis.ipynb` | **Main analysis notebook** — training pipeline from raw GEO data to a validated LASSO biomarker panel |
-| `externalvalidation.ipynb` | **External validation notebook** — loads the exported model and evaluates it on an unseen dataset |
+| `analysis.ipynb` | **Main analysis notebook** training pipeline from raw GEO data to a validated LASSO biomarker panel |
+| `externalvalidation.ipynb` | **External validation notebook** loads the exported model and evaluates it on an unseen dataset |
 | `data/` | Raw GEO series-matrix files used by the notebooks |
 | `exported_model/` | Saved model artifacts (scaler, Lasso model, feature list) produced by the analysis notebook |
 
