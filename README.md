@@ -26,7 +26,7 @@ This notebook performs end-to-end biomarker discovery on **GSE15852** (43 cancer
 3. **Unsupervised Variance Pre-Filter** — Removes the bottom 50 % of probes by variance (an unsupervised filter that never examines labels), reducing the feature space to ~11 142 probes.
 4. **Standardisation** — Fits a `StandardScaler` on the filtered matrix so LASSO regularisation penalises features on the same scale.
 5. **PCA Diagnostic** — Verifies that the post-processing data still requires ~21 components for 80 % variance (unchanged from earlier runs), confirming discriminatory signal is preserved.
-6. **LassoCV with 1-SE Rule** — Runs 10-fold cross-validated LASSO to choose `alpha_min`, then applies a 1-standard-error rule to select a larger, more parsimonious `alpha`. This yields **15 non-zero probes** — the final biomarker panel.
+6. **LassoCV with 1-SE Rule** — Runs 10-fold cross-validated LASSO to choose `alpha_min`, then applies a 1-standard-error rule to select a larger, more parsimonious `alpha`. This yields **15 non-zero probes**, the final biomarker panel.
 7. **In-Sample Evaluation** — Reports R² ≈ 0.73, training accuracy ≈ 98.8 %, and a per-class classification report (precision/recall/F1).
 8. **Model Export** — Saves the scaler, the LASSO model, and the list of retained feature names to `exported_model/` via `joblib`.
 9. **Probe-ID → Gene Mapping** — Maps the 15 retained Affymetrix probe IDs to human gene symbols using the GPL96 annotation file (e.g., `RGS1`, `CD24`, `KRT19`, `LPL`, `S100B`, …).
@@ -47,7 +47,7 @@ This notebook evaluates the trained model on **GSE42568** (104 cancer + 17 norma
 | Sensitivity (Tumor recall) | 100 % |
 | Specificity (Normal recall) | 82.4 % |
 
-The confusion matrix shows 14/17 normals correctly classified and all 104 tumors detected, with **zero false negatives** — the model never misses a cancer sample.
+The confusion matrix shows 14/17 normals correctly classified and all 104 tumors detected, with **zero false negatives**, the model never misses a cancer sample.
 
 ## Datasets
 
