@@ -1,6 +1,6 @@
 # Breast Cancer Biomarker Discovery via LASSO Regression
 
-A machine learning project that identifies gene biomarkers capable of distinguishing breast cancer tissue from normal breast tissue using L1-regularised (LASSO) regression on microarray transcriptomic data.
+A machine learning project that identifies gene biomarkers capable of distinguishing breast cancer tissue from normal breast tissue using L1-regularised (LASSO) regression on microarray transcriptomic data
 
 ## Project Overview
 
