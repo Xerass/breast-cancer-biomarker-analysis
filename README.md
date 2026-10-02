@@ -37,17 +37,21 @@ This notebook evaluates the trained model on **GSE42568** (104 cancer + 17 norma
 
 1. **Load Training Artifacts** — Reads the saved scaler, LASSO model, and retained feature list from `exported_model/`.
 2. **Parse External Dataset** — Extracts labels and the expression matrix from the GSE42568 series-matrix file (121 samples × 54 675 probes).
-3. **Feature Alignment** — Builds a matrix aligned to all scaler features (~11 142 columns), filling any missing probes with 0, then applies the *training* scaler (`.transform()`, **not** `.fit_transform()`). All 15 retained probes are found in the external data.
-4. **Evaluation** — Applies a 0.5 decision threshold on continuous LASSO predictions:
+3. **Log2 Scale Guard** — Applies the same rule as training (`log2(x+1)` only if max > 50). GSE42568 is already log2 (max ≈ 16), so no transform is applied.
+4. **Feature Alignment** — Builds a matrix aligned to all scaler features (11 142 columns), filling any missing probes with 0. All 15 retained probes are found in the external data.
+5. **Evaluation** — Scores the frozen LASSO model two ways and applies a 0.5 decision threshold:
+   - **Option A (primary):** standardises the 15 panel probes with GSE42568's own per-probe mean/SD (no labels used), removing the MAS5 vs RMA baseline offset.
+   - **Option B:** the original approach, the *training* scaler (`.transform()`) on the log-aligned data. The panel probes still sit 1–5.5 log2 units away from the training means here.
 
-| Metric | Value |
-|---|---|
-| Accuracy | 97.5 % |
-| ROC-AUC | 0.901 |
-| Sensitivity (Tumor recall) | 100 % |
-| Specificity (Normal recall) | 82.4 % |
+| Metric | Option A (per-dataset) | Option B (training scaler) |
+|---|---|---|
+| Accuracy | 75.2 % | 97.5 % |
+| ROC-AUC | 0.880 | 0.901 |
+| Sensitivity (Tumor recall) | 74.0 % | 100 % |
+| Specificity (Normal recall) | 82.4 % | 82.4 % |
+| Confusion matrix (TN/FP/FN/TP) | 14/3/27/77 | 14/3/0/104 |
 
-The confusion matrix shows 14/17 normals correctly classified and all 104 tumors detected, with **zero false negatives**, the model never misses a cancer sample.
+Ranking quality holds up across both (AUC ≈ 0.88–0.90), so the panel does separate tumour from normal tissue on an independent cohort. The fixed 0.5 threshold does not transfer cleanly between platforms, though. Option B's 100 % sensitivity is inflated by the normalisation offset. Option A is conservative on sensitivity because centring on a 86 %-tumour cohort shifts tumour scores towards the threshold.
 
 ## Datasets
 
@@ -57,6 +61,8 @@ The confusion matrix shows 14/17 normals correctly classified and all 104 tumors
 | GSE42568 | External Validation | GPL570 (HG-U133 Plus 2.0) | 17 Normal + 104 Tumor |
 
 > GPL570 is a superset of GPL96, so the 15 biomarker probes are present in both platforms.
+>
+> GSE15852 is raw MAS5 intensity (max ≈ 19 000) while GSE42568 is already log2 RMA (max ≈ 16). The validation notebook applies the same log2 guard as training (no-op here) and then standardises the panel probes per dataset (Option A) to remove the remaining MAS5 vs RMA offset.
 
 ## Requirements
 
